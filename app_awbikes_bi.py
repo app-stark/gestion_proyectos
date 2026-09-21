@@ -11,25 +11,6 @@ st.set_page_config(
 )
 
 st.title("🚲 AW-Bikes — Business Intelligence Pilot")
-st.caption(
-    "Análisis de clientes, comportamiento de compra y oportunidades de segmentación comercial"
-)
-
-# ============================================================
-# 1. CARGA DE DATOS
-# ============================================================
-uploaded = st.file_uploader("Carga datos_actividad1.xlsx", type=["xlsx"])
-
-if uploaded:
-    df = pd.read_excel(uploaded, sheet_name="Hoja2")
-else:
-    default = Path("datos_actividad1.xlsx")
-    if default.exists():
-        df = pd.read_excel(default, sheet_name="Hoja2")
-        st.info("Usando datos_actividad1.xlsx del directorio actual.")
-    else:
-        st.warning("Carga el archivo datos_actividad1.xlsx para iniciar el análisis.")
-        st.stop()
 
 # ============================================================
 # 2. NORMALIZACIÓN
@@ -52,12 +33,10 @@ rate = df["BikeBuyer"].mean()
 avg_spend = df["AvgMonthSpend"].mean()
 buyer_spend = df.loc[df["BikeBuyer"] == 1, "AvgMonthSpend"].mean()
 
-c1, c2, c3, c4 = st.columns(4)
+c1, c2 = st.columns(2)
 
 c1.metric("Clientes analizados", f"{n:,}")
 c2.metric("Compradores de bicicleta", f"{buyers:,}")
-c3.metric("Tasa de compra", f"{rate:.1%}")
-c4.metric("Gasto mensual medio", f"${avg_spend:,.2f}")
 
 st.divider()
 
