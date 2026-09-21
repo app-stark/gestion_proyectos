@@ -108,10 +108,6 @@ fig1.update_layout(
 
 st.plotly_chart(fig1, use_container_width=True)
 
-st.info(
-    "Insight: esta gráfica permite identificar diferencias de comportamiento entre "
-    "perfiles profesionales y formular hipótesis para campañas segmentadas."
-)
 
 # ============================================================
 # 5. GRÁFICA 2 — TASA DE COMPRA POR EDUCACIÓN
@@ -225,43 +221,3 @@ fig4.update_layout(height=450)
 
 st.plotly_chart(fig4, use_container_width=True)
 
-# ============================================================
-# 8. GRÁFICA 5 — MAPA DE OPORTUNIDAD
-# ============================================================
-st.header("5. ⭐ Mapa de oportunidad comercial")
-
-segment = (
-    view.groupby("Occupation")
-    .agg(
-        Clientes=("CustomerID", "size"),
-        Tasa_compra=("BikeBuyer", "mean"),
-        Gasto_medio=("AvgMonthSpend", "mean")
-    )
-    .reset_index()
-)
-
-segment["Tasa_pct"] = segment["Tasa_compra"] * 100
-
-fig5 = px.scatter(
-    segment,
-    x="Tasa_pct",
-    y="Gasto_medio",
-    size="Clientes",
-    hover_name="Occupation",
-    text="Occupation",
-    labels={
-        "Tasa_pct": "Tasa de compra (%)",
-        "Gasto_medio": "Gasto medio mensual en recambios",
-        "Clientes": "Número de clientes"
-    },
-    title="Mapa de oportunidad: conversión vs. valor económico"
-)
-
-fig5.update_traces(
-    textposition="top center",
-    textfont_size=10
-)
-
-fig5.update_layout(height=550)
-
-st.plotly_chart(fig5, use_container_width=True)
