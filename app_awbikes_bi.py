@@ -18,18 +18,13 @@ st.caption(
 # ============================================================
 # 1. CARGA DE DATOS
 # ============================================================
-uploaded = st.file_uploader("Carga datos_actividad1.xlsx", type=["xlsx"])
+default = Path("datos_actividad1.xlsx")
 
-if uploaded:
-    df = pd.read_excel(uploaded, sheet_name="Hoja2")
-else:
-    default = Path("datos_actividad1.xlsx")
-    if default.exists():
-        df = pd.read_excel(default, sheet_name="Hoja2")
-        st.info("Usando datos_actividad1.xlsx del directorio actual.")
-    else:
-        st.warning("Carga el archivo datos_actividad1.xlsx para iniciar el análisis.")
-        st.stop()
+if not default.exists():
+    st.error("No se encontró el archivo datos_actividad1.xlsx en el directorio de la aplicación.")
+    st.stop()
+
+df = pd.read_excel(default, sheet_name="Hoja2")
 
 # ============================================================
 # 2. NORMALIZACIÓN
@@ -44,25 +39,7 @@ df["BikeBuyerText"] = df["BikeBuyer"].map({
 })
 
 # ============================================================
-# 3. KPIs
-# ============================================================
-n = len(df)
-buyers = int(df["BikeBuyer"].sum())
-rate = df["BikeBuyer"].mean()
-avg_spend = df["AvgMonthSpend"].mean()
-buyer_spend = df.loc[df["BikeBuyer"] == 1, "AvgMonthSpend"].mean()
-
-c1, c2, c3, c4 = st.columns(4)
-
-c1.metric("Clientes analizados", f"{n:,}")
-c2.metric("Compradores de bicicleta", f"{buyers:,}")
-c3.metric("Tasa de compra", f"{rate:.1%}")
-c4.metric("Gasto mensual medio", f"${avg_spend:,.2f}")
-
-st.divider()
-
-# ============================================================
-# 4. FILTROS
+# 3. FILTROS
 # ============================================================
 st.sidebar.header("🔎 Filtros")
 
@@ -92,7 +69,7 @@ if view.empty:
     st.stop()
 
 # ============================================================
-# 5. GRÁFICA 1 — TASA DE COMPRA POR OCUPACIÓN
+# 4. GRÁFICA 1 — TASA DE COMPRA POR OCUPACIÓN
 # ============================================================
 st.header("1. Tasa de compra por ocupación")
 
@@ -137,7 +114,7 @@ st.info(
 )
 
 # ============================================================
-# 6. GRÁFICA 2 — TASA DE COMPRA POR EDUCACIÓN
+# 5. GRÁFICA 2 — TASA DE COMPRA POR EDUCACIÓN
 # ============================================================
 st.header("2. Tasa de compra por nivel educativo")
 
@@ -176,7 +153,7 @@ fig2.update_layout(
 st.plotly_chart(fig2, use_container_width=True)
 
 # ============================================================
-# 7. GRÁFICA 3 — VEHÍCULOS
+# 6. GRÁFICA 3 — VEHÍCULOS
 # ============================================================
 st.header("3. Tasa de compra según número de vehículos")
 
@@ -213,7 +190,7 @@ fig3.update_layout(height=450)
 st.plotly_chart(fig3, use_container_width=True)
 
 # ============================================================
-# 8. GRÁFICA 4 — HIJOS EN CASA
+# 7. GRÁFICA 4 — HIJOS EN CASA
 # ============================================================
 st.header("4. Tasa de compra según hijos en el hogar")
 
@@ -249,7 +226,7 @@ fig4.update_layout(height=450)
 st.plotly_chart(fig4, use_container_width=True)
 
 # ============================================================
-# 9. GRÁFICA 5 — MAPA DE OPORTUNIDAD
+# 8. GRÁFICA 5 — MAPA DE OPORTUNIDAD
 # ============================================================
 st.header("5. ⭐ Mapa de oportunidad comercial")
 
@@ -297,7 +274,7 @@ st.success(
 )
 
 # ============================================================
-# 10. TABLA DE SEGMENTOS
+# 9. TABLA DE SEGMENTOS
 # ============================================================
 st.header("📋 Resumen de segmentos")
 
@@ -326,7 +303,7 @@ st.dataframe(
 )
 
 # ============================================================
-# 11. CONCLUSIÓN EJECUTIVA
+# 10. CONCLUSIÓN EJECUTIVA
 # ============================================================
 st.header("💡 Lectura ejecutiva")
 
